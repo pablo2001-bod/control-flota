@@ -5,7 +5,7 @@
         <h1><b>Vehículos Registrados</b>            
             {% if not user.username == "gerente" %}
             <a href="/NuevoVehiculo/" class="btn btn-info"> 
-                <i class="icon-plus-circle"></i> Nuevo Vehículo
+                <i class="fa fa-plus-circle"></i> Nuevo Vehículo
             </a>        
             {% endif %}
         </h1>
@@ -40,7 +40,7 @@
                         <th>AÑO MODELO</th>       
                         <th>FOTO</th>       
                         <th>COSTO ACUMULADO</th>               
-                        <th style="width: 180px;">ACCIONES</th>               
+                        <th style="width: 220px;">ACCIONES</th>               
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +61,7 @@
                             <td class="text-center">
                                 {% if vehiculoTemporal.foto %}
                                  <a href="{{ vehiculoTemporal.foto.url }}" target="_blank">
-                                    <img src="{{ vehiculoTemporal.foto.url }}" style="height:40px; width:40px; border-radius:100px;"> 
+                                    <img src="{{ vehiculoTemporal.foto.url }}" style="height:40px; width:40px; border-radius:100px; object-fit: cover;"> 
                                  </a>                                      
                                 {% else %}
                                     <b>N/A</b>
@@ -76,25 +76,25 @@
                             </td>
                             <td>
                                 <a href="/editarVehiculo/{{vehiculoTemporal.id}}/" class="btn btn-outline-warning" title="Editar Vehículo">
-                                    <i class="icon-edit"></i>
+                                    <i class="fa fa-edit"></i>
                                 </a>
                                 <a href="/eliminarVehiculo/{{vehiculoTemporal.id}}/" title="Eliminar Vehículo" onclick="return confirm('¿Está seguro de eliminar este vehículo?')" class="btn btn-outline-danger">
-                                     <i class="icon-trash"></i>
+                                     <i class="fa fa-trash"></i>
                                 </a>
 
                                 {% if vehiculoTemporal.foto %}                                     
                                     <a title="Ver Imagen" class="btn btn-outline-info" href="{{ vehiculoTemporal.foto.url }}" target="_blank">
-                                        <i class="icon-image"></i>
+                                        <i class="fa fa-image"></i>
                                     </a>    
                                     <a title="Descargar Imagen" class="btn btn-outline-dark" href="{{ vehiculoTemporal.foto.url }}" download>
-                                        <i class="icon-download"></i>
+                                        <i class="fa fa-download"></i>
                                     </a>                             
                                 {% else %}
                                      <a title="No hay imagen disponible" class="disabled btn btn-outline-info" href="javascript:void(0)">
-                                        <i class="icon-image"></i>
+                                        <i class="fa fa-image"></i>
                                     </a>    
                                      <a title="No hay imagen disponible" class="disabled btn btn-outline-dark" href="javascript:void(0)">
-                                        <i class="icon-download"></i>
+                                        <i class="fa fa-download"></i>
                                      </a>  
                                 {% endif %}
                             </td>
