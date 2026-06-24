@@ -17,6 +17,9 @@ Including another URLconf
 """
 URL configuration for control-flota project.
 """
+"""
+URL configuration for control-flota project.
+"""
 from django.contrib import admin
 from django.urls import path, include
 # Importamos settings.py
