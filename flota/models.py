@@ -5,8 +5,8 @@ from django.dispatch import receiver
 
 class Vehiculo(models.Model):
     placa = models.CharField(max_length=20, unique=True)
-    tipo_vehiculo = models.CharField(max_length=50)  # Sedán/Camioneta/Camión
-    tipo_combustible = models.CharField(max_length=30)  # Gasolina/Diésel/Eléctrico
+    tipo_vehiculo = models.CharField(max_length=50)  
+    tipo_combustible = models.CharField(max_length=30)  
     seguro_vigente = models.BooleanField(default=False)
     anio_modelo = models.IntegerField()
     foto = models.ImageField(upload_to='vehiculos/', null=True, blank=True)
