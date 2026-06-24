@@ -11,12 +11,12 @@
                     {% csrf_token %}
                     
                     <b>Placa:</b> <br>
-                    <input required minlength="7" maxlength="10" placeholder="Ingrese la placa (Ej: PBX-1234)" class="form-control" type="text" name="placa">
+                    <input required minlength="7" maxlength="10" placeholder="Ingrese la placa del vehículo" class="form-control" type="text" name="placa">
                     <br>
                     
                     <b>Tipo de Vehículo:</b> <br>
                     <select required class="form-control" name="tipo_vehiculo">
-                        <option value="">-- Seleccione Tipo --</option>
+                        <option value="">-- Seleccione el Tipo --</option>
                         <option value="Sedán">Sedán</option>
                         <option value="Camioneta">Camioneta</option>
                         <option value="Camión">Camión</option>
@@ -24,31 +24,28 @@
                     <br>
                     
                     <b>Tipo de Combustible:</b> <br>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="tipo_combustible" id="gasolina" value="Gasolina" checked>
-                        <label class="form-check-label" for="gasolina">Gasolina</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="tipo_combustible" id="diesel" value="Diésel">
-                        <label class="form-check-label" for="diesel">Diésel</label>
-                    </div>
-                    <br><br>
-                    
-                    <b>¿Tiene seguro vigente?</b> &nbsp;
-                    <input type="checkbox" name="seguro_vigente" value="True" style="transform: scale(1.2); vertical-align: middle;">
-                    <br><br>
+                    <select required class="form-control" name="tipo_combustible">
+                        <option value="">-- Seleccione Combustible --</option>
+                        <option value="Gasolina">Gasolina</option>
+                        <option value="Diésel">Diésel</option>
+                    </select>
+                    <br>
                     
                     <b>Año del Modelo:</b> <br>
                     <input required placeholder="Ingrese el año de fabricación" class="form-control" type="number" name="anio_modelo">
                     <br>
                     
-                    <b>Fotografía del Vehículo:</b>
-                    <input type="file" name="foto" id="foto" required>
+                    <b>¿Tiene seguro vigente?</b> &nbsp;
+                    <input type="checkbox" name="seguro_vigente" value="True" style="transform: scale(1.2); vertical-align: middle;">
+                    <br><br>
+                    
+                    <b>Fotografía</b>
+                    <input type="file" name="foto" id="foto">
                     <br> <br>
                     
                     <div style="text-align: center;">
-                        <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> Guardar</button>
-                        <a href="/listadodevehiculos/" class="btn btn-danger"> <i class="fa fa-times"></i> Cancelar</a>
+                        <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> GUARDAR</button>
+                        <a href="/listadodevehiculos/" class="btn btn-danger"> <i class="fa fa-times"></i> CANCELAR</a>
                     </div>
                 </form>
                 <br>
@@ -61,15 +58,19 @@
             rules: {
                 placa: { required: true, minlength: 7 },
                 tipo_vehiculo: { required: true },
-                anio_modelo: { required: true, number: true }
+                tipo_combustible: { required: true },
+                anio_modelo: { required: true, number: true, min: 1900 }
             },
             messages: {
-                placa: { required: "Por favor ingrese la placa", minlength: "Debe tener al menos 7 caracteres" },
+                placa: { required: "Por favor ingrese la placa", minlength: "Debe ingresar una placa válida" },
                 tipo_vehiculo: { required: "Por favor seleccione el tipo de vehículo" },
+                tipo_combustible: { required: "Por favor seleccione el combustible" },
                 anio_modelo: { required: "Por favor ingrese el año", number: "Introduzca un número válido" }
             }
         });
-
+    </script>
+    
+    <script>
         $("#foto").fileinput({
             language: "es",
             allowedFileExtensions: ["png", "jpg", "jpeg"],
