@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Control de Flota - Listado de Mantenimientos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="//cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <div class="site-wrap">
+        <div class="site-navbar bg-dark py-2">
+            <div class="container d-flex justify-content-between align-items-center">
+                <h2 class="text-white mb-0">Gestión de Flota - Mantenimientos</h2>
+                <a href="/NuevoMantenimiento/" class="btn btn-success btn-sm">Registrar Mantenimiento</a>
+            </div>
+        </div>
+
+        <div class="container my-5">
+            <div class="card p-4 shadow">
+                <h3 class="mb-4 text-black text-center">Historial de Mantenimientos Vehiculares</h3>
+
+                <div class="table-responsive">
+                    <table id="tablaMantenimientos" class="table table-striped table-bordered text-black">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th>Fecha del Servicio</th>
+                                <th>Tipo de Mantenimiento</th>
+                                <th>Costo del Taller</th>
+                                <th>Repuestos Cambiados</th>
+                                <th>Documento PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in mantenimientos %}
+                            <tr>
+                                <td>{{ m.fecha_servicio|date:"Y-m-d" }}</td>
+                                <td>
+                                    {% if m.tipo_mantenimiento == "Preventivo" %}
+                                        <span class="badge badge-info">Preventivo</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Correctivo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="font-weight-bold">${{ m.costo_taller }}</td>
+                                <td>{{ m.repuestos_cambiados }}</td>
+                                <td class="text-center">
+                                    {% if m.pdf_diagnostico %}
+                                        <a href="{{ m.pdf_diagnostico.url }}" target="_blank" class="btn btn-outline-danger btn-sm">
+                                            <span class="icon-file-pdf"></span> Ver PDF
+                                        </a>
+                                    {% else %}
+                                        <span class="badge badge-secondary">Sin archivo</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No hay mantenimientos registrados aún.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#tablaMantenimientos').DataTable({
+                language: {
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ mantenimientos",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Último"
+                    }
+                }
+            });
+        });
+    </script>
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                Swal.fire({
+                    title: '¡Registrado!',
+                    text: "{{ message }}",
+                    icon: 'success',
+                    confirmButtonText: 'Entendido'
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
+
+</body>
+</html>
