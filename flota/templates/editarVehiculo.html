@@ -49,13 +49,11 @@
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-        {% if vehiculo.foto %}
         initialPreview: [
-            "{{ vehiculo.foto.url }}" // Corregido al archivo del vehículo
+            "{{ vehiculo.foto.url }}" 
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
-        {% endif %}
         overwriteInitial: true
     });
     $(".fileinput-upload").hide();

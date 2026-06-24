@@ -67,7 +67,6 @@
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-        {% if mantenimiento.pdf_diagnostico %}
         initialPreview: [
             "{{ mantenimiento.pdf_diagnostico.url }}"
         ],
@@ -79,7 +78,6 @@
         previewSettings: {
             pdf: { width: "100%", height: "260px" }
         },
-        {% endif %}
         overwriteInitial: true
     });
     $(".fileinput-upload").hide();
