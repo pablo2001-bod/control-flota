@@ -9,11 +9,9 @@
                 <hr>
                 <form enctype="multipart/form-data" id="form_nuevo_vehiculo" action="/guardarVehiculo/" method="post">
                     {% csrf_token %}
-                    
                     <b>Placa:</b> <br>
                     <input required minlength="7" maxlength="10" placeholder="Ingrese la placa del vehículo" class="form-control" type="text" name="placa">
                     <br>
-                    
                     <b>Tipo de Vehículo:</b> <br>
                     <select required class="form-control" name="tipo_vehiculo">
                         <option value="">-- Seleccione el Tipo --</option>
@@ -22,7 +20,6 @@
                         <option value="Camión">Camión</option>
                     </select>
                     <br>
-                    
                     <b>Tipo de Combustible:</b> <br>
                     <select required class="form-control" name="tipo_combustible">
                         <option value="">-- Seleccione Combustible --</option>
@@ -30,11 +27,9 @@
                         <option value="Diésel">Diésel</option>
                     </select>
                     <br>
-                    
                     <b>Año del Modelo:</b> <br>
                     <input required placeholder="Ingrese el año de fabricación" class="form-control" type="number" name="anio_modelo">
                     <br>
-                    
                     <b>¿Tiene seguro vigente?</b> &nbsp;
                     <input type="checkbox" name="seguro_vigente" value="True" style="transform: scale(1.2); vertical-align: middle;">
                     <br><br>
@@ -42,36 +37,55 @@
                     <b>Fotografía</b>
                     <input type="file" name="foto" id="foto">
                     <br> <br>
-                    
-                    <div style="text-align: center;">
-                        <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> GUARDAR</button>
-                        <a href="/listadodevehiculos/" class="btn btn-danger"> <i class="fa fa-times"></i> CANCELAR</a>
+                    <div style="text-align: center; ">
+                    <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> GUARDAR</button>
+                    <a href="/listadodevehiculos/" class="btn btn-danger"> <i class="fa fa-times"></i> CANCELAR</a>
                     </div>
                 </form>
+
                 <br>
             </div>
         </div>
     </div>
-
     <script>
         $("#form_nuevo_vehiculo").validate({
-            rules: {
-                placa: { required: true, minlength: 7 },
-                tipo_vehiculo: { required: true },
-                tipo_combustible: { required: true },
-                anio_modelo: { required: true, number: true, min: 1900 }
+            rules:{
+                placa:{
+                    required:true,
+                    minlength: 7
+                },
+                tipo_vehiculo:{
+                    required:true
+                },
+                tipo_combustible:{
+                    required:true
+                },
+                anio_modelo:{
+                    required:true,
+                    number:true
+                }
             },
-            messages: {
-                placa: { required: "Por favor ingrese la placa", minlength: "Debe ingresar una placa válida" },
-                tipo_vehiculo: { required: "Por favor seleccione el tipo de vehículo" },
-                tipo_combustible: { required: "Por favor seleccione el combustible" },
-                anio_modelo: { required: "Por favor ingrese el año", number: "Introduzca un número válido" }
+            messages:{
+                placa:{
+                    required:"Por favor ingrese la placa",
+                    minlength:"La placa debe tener al menos 7 caracteres"
+                },
+                tipo_vehiculo:{
+                    required:"Por favor seleccione el tipo"
+                },
+                tipo_combustible:{
+                    required:"Por favor seleccione el combustible"
+                },
+                anio_modelo:{
+                    required:"Por favor ingrese el año",
+                    number: "Por favor introduzca un número válido"
+                }
             }
         });
     </script>
     
     <script>
-        $("#foto").fileinput({
+          $("#foto").fileinput({
             language: "es",
             allowedFileExtensions: ["png", "jpg", "jpeg"],
             showCaption: false,
@@ -80,4 +94,5 @@
         });
         $(".fileinput-upload").hide();
     </script>
-{% endblock %}
+     
+ {% endblock %}
