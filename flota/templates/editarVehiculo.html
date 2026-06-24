@@ -13,23 +13,23 @@
                     <br>
                     
                     <b>Placa:</b> <br>
-                    <input value="{{vehiculo.placa}}" placeholder="Ingrese la Nueva placa" class="form-control" type="text" name="placa">
+                    <input value="{{vehiculo.placa}}" placeholder="Ingrese el nuevo número de placa" class="form-control" type="text" name="placa">
                     <br>
                     
-                    <b>Tipo de Vehículo:</b> <br>
-                    <input value="{{vehiculo.tipo_vehiculo}}" placeholder="Ingrese el Nuevo tipo" class="form-control" type="text" name="tipo_vehiculo">
+                    <b>Tipo Vehículo:</b> <br>
+                    <input value="{{vehiculo.tipo_vehiculo}}" placeholder="Ingrese el nuevo tipo de vehículo" class="form-control" type="text" name="tipo_vehiculo">
                     <br>
                     
-                    <b>Tipo de Combustible:</b> <br>
-                    <input value="{{vehiculo.tipo_combustible}}" placeholder="Ingrese el Nuevo combustible" class="form-control" type="text" name="tipo_combustible">
+                    <b>Tipo Combustible:</b> <br>
+                    <input value="{{vehiculo.tipo_combustible}}" placeholder="Ingrese el nuevo tipo de combustible" class="form-control" type="text" name="tipo_combustible">
                     <br>
                     
-                    <b>Año del Modelo:</b> <br>
-                    <input value="{{vehiculo.anio_modelo}}" placeholder="Ingrese el Nuevo año" class="form-control" type="number" name="anio_modelo">
+                    <b>Año Modelo:</b> <br>
+                    <input value="{{vehiculo.anio_modelo}}" placeholder="Ingrese el nuevo año del modelo" class="form-control" type="number" name="anio_modelo">
                     <br>
                     
-                    <b>¿Tiene seguro vigente?</b> &nbsp;
-                    <input type="checkbox" name="seguro_vigente" value="True" {% if vehiculo.seguro_vigente %}checked{% endif %} style="transform: scale(1.2); vertical-align: middle;">
+                    <b>¿Seguro Vigente?</b> <br>
+                    <input type="checkbox" name="seguro_vigente" value="True" {% if vehiculo.seguro_vigente %}checked{% endif %} style="transform: scale(1.2); margin-top: 5px;">
                     <br><br>
                     
                     <b>Subir Nueva Foto (Opcional):</b> <br>
@@ -38,8 +38,7 @@
 
                     <div style="text-align: center;">
                         <button class="btn btn-success" type="submit"><i class="icon-edit"></i> Actualizar</button>
-                        <a href="/listadodevehiculos" class="btn btn-danger"><i class="icon-close"></i> Cancelar
-                        </a>
+                        <a href="/listadodevehiculos/" class="btn btn-danger"><i class="icon-close"></i> Cancelar</a>
                     </div>
                 </form>
 
@@ -50,20 +49,19 @@
     <script>
     $("#foto").fileinput({
         language: "es",
-        allowedFileExtensions: ["png", "jpg", "jpeg"],
+        allowedFileExtensions: ["png|jpg|jpeg"],
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-
+        {% if vehiculo.foto %}
         initialPreview: [
             "{{ vehiculo.foto.url }}"
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
-
         overwriteInitial: true
-        });
-        $(".fileinput-upload").hide();
-            
+        {% endif %}
+    });
+    $(".fileinput-upload").hide();
     </script>
 {% endblock %}
