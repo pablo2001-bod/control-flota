@@ -1,16 +1,13 @@
 {% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <br>
-                <h1><b>Actualizar Vehículo</b></h1>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 bg-light p-4 rounded shadow-sm">
+                <h1 class="text-center mb-4"><b>Actualizar Vehículo</b></h1>
                 <hr>
                 <form action="/actualizarVehiculo/" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input value="{{vehiculo.id}}" class="form-control" type="hidden" name="id" readonly>
-                    <br>
+                    <input value="{{vehiculo.id}}" type="hidden" name="id" readonly>
                     
                     <b>Placa:</b> <br>
                     <input value="{{vehiculo.placa}}" placeholder="Ingrese la Nueva placa" class="form-control" type="text" name="placa">
@@ -37,16 +34,14 @@
                     <br>
 
                     <div style="text-align: center;">
-                        <button class="btn btn-success" type="submit"><i class="icon-edit"></i> Actualizar</button>
-                        <a href="/listadodevehiculos" class="btn btn-danger"><i class="icon-close"></i> Cancelar
-                        </a>
+                        <button class="btn btn-success me-2" type="submit"><i class="fas fa-edit"></i> Actualizar</button>
+                        <a href="/listadodevehiculos" class="btn btn-danger"><i class="fas fa-times"></i> Cancelar</a>
                     </div>
                 </form>
-
-                <br>
             </div>
         </div>
     </div>
+
     <script>
     $("#foto").fileinput({
         language: "es",
@@ -54,16 +49,15 @@
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-
+        {% if vehiculo.foto %}
         initialPreview: [
             "{{ vehiculo.foto.url }}"
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
-
         overwriteInitial: true
-        });
-        $(".fileinput-upload").hide();
-            
+        {% endif %}
+    });
+    $(".fileinput-upload").hide();
     </script>
 {% endblock %}
