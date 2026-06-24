@@ -7,7 +7,6 @@
                 <br>
                 <h1><b>Registrar Mantenimiento</b></h1>
                 <hr>
-                
                 <form enctype="multipart/form-data" id="form_mantenimiento" action="/guardarMantenimiento/" method="post">
                     {% csrf_token %}
                     
@@ -39,21 +38,47 @@
                     </div>
                     <br><br>
                     
-                    <b>Repuestos Cambiados / Diagnóstico de Fallas:</b> <br>
-                    <textarea required class="form-control" name="repuestos_cambiados" placeholder="Describa el trabajo realizado en la unidad..." rows="3"></textarea>
+                    <b>Repuestos Cambiados / Detalles:</b> <br>
+                    <textarea required class="form-control" name="repuestos_cambiados" placeholder="Describa el trabajo realizado..." rows="3"></textarea>
                     <br>
                     
-                    <b>Hoja de Diagnóstico o Factura (PDF):</b>
-                    <input class="form-control" type="file" name="pdf_diagnostico" id="pdf_diagnostico" accept="application/pdf" required>
+                    <b>Hoja de Diagnóstico / Factura (PDF):</b>
+                    <input type="file" name="pdf_diagnostico" id="pdf_diagnostico" required>
                     <br> <br>
                     
                     <div style="text-align: center;">
                         <button class="btn btn-success" type="submit"> <i class="icon-save"></i> Guardar Reporte</button>
-                        <a href="/listadodemantenimientos" class="btn btn-danger"> <i class="icon-close"></i> Cancelar</a>
+                        <a href="/listadodemantenimientos/" class="btn btn-danger"> <i class="icon-close"></i> Cancelar</a>
                     </div>
                 </form>
                 <br>
             </div>
         </div>
     </div>
+
+    <script>
+        $("#form_mantenimiento").validate({
+            rules: {
+                vehiculo_id: { required: true },
+                fecha_servicio: { required: true },
+                costo_taller: { required: true, number: true },
+                repuestos_cambiados: { required: true }
+            },
+            messages: {
+                vehiculo_id: { required: "Por favor seleccione el vehículo" },
+                fecha_servicio: { required: "Por favor ingrese la fecha" },
+                costo_taller: { required: "Por favor ingrese el costo", number: "Ingrese un número válido" },
+                repuestos_cambiados: { required: "Por favor detalle los repuestos" }
+            }
+        });
+
+        $("#pdf_diagnostico").fileinput({
+            language: "es",
+            allowedFileExtensions: ["pdf"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false
+        });
+        $(".fileinput-upload").hide();
+    </script>
 {% endblock %}
