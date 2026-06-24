@@ -48,11 +48,11 @@
                         <a href="/listadodevehiculos/" class="btn btn-danger"><i class="fa fa-times"></i> CANCELAR</a>
                     </div>
                 </form>
+
                 <br>
             </div>
         </div>
     </div>
-
     <script>
     $("#foto").fileinput({
         language: "es",
@@ -66,8 +66,8 @@
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
-        {% endif %}
         overwriteInitial: true
+        {% endif %}
     });
     $(".fileinput-upload").hide();
     </script>
