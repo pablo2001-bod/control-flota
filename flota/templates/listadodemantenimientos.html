@@ -1,54 +1,68 @@
 {% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
-    <center>
-        <br>
-        <h1><b>Historial de Mantenimientos</b>            
-            <a href="/NuevoMantenimiento/" class="btn btn-info"> 
-                <i class="icon-plus-circle"></i> Registrar Orden
-            </a>        
-        </h1>
-        <hr>
-    </center>
-    <br>
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-10">
-            <table id="tbl_mantenimientos" class="table table-hover table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>VEHÍCULO</th>  
-                        <th>FECHA</th>   
-                        <th>COSTO</th>   
-                        <th>TIPO MANTENIMIENTO</th>   
-                        <th>REPUESTOS / DETALLES</th>       
-                        <th>DIAGNÓSTICO (PDF)</th>               
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for m in mantenimientos %}
-                        <tr>
-                            <td><b>{{ m.vehiculo.placa }}</b></td>
-                            <td>{{ m.fecha_servicio }}</td>
-                            <td style="color: green; font-weight: bold;">${{ m.costo_taller }}</td>
-                            <td>{{ m.tipo_mantenimiento }}</td>
-                            <td>{{ m.repuestos_cambiados }}</td>
-                            <td class="text-center">
-                                {% if m.pdf_diagnostico %}
-                                    <a class="btn btn-outline-danger btn-sm" href="{{ m.pdf_diagnostico.url }}" target="_blank">
-                                        <i class="icon-file-pdf"></i> Ver Factura PDF
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Sin archivo</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><b>Historial de Mantenimientos</b></h1>
+        <a href="/nuevoMantenimiento/" class="btn btn-info text-white text-uppercase" style="background-color: #17a2b8;">
+            Registrar Orden
+        </a>
     </div>
+    
+    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+        <table id="tabla_mantenimientos" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>VEHÍCULO</th>
+                    <th>FECHA</th>
+                    <th>COSTO</th>
+                    <th>TIPO MANTENIMIENTO</th>
+                    <th>REPUESTOS / DETALLES</th>
+                    <th>DIAGNÓSTICO (PDF)</th>
+                    <!-- Nueva columna de acciones -->
+                    <th class="text-center">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mantenimiento in misMantenimientos %}
+                <tr>
+                    <td>{{ mantenimiento.vehiculo.placa }}</td>
+                    <td>{{ mantenimiento.fecha }}</td>
+                    <td class="text-success font-weight-bold">${{ mantenimiento.costo }}</td>
+                    <td>{{ mantenimiento.tipo_mantenimiento }}</td>
+                    <td>{{ mantenimiento.repuestos_detalles }}</td>
+                    <td class="text-center">
+                        {% if mantenimiento.diagnostico_pdf %}
+                            <a href="{{ mantenimiento.diagnostico_pdf.url }}" target="_blank" class="btn btn-outline-danger btn-sm">
+                                VER FACTURA PDF
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Sin PDF</span>
+                        {% endif %}
+                    </td>
+                    <!-- Botones de Editar y Eliminar idénticos a los de vehículos -->
+                    <td class="text-center">
+                        <a href="/editarMantenimiento/{{ mantenimiento.id }}" class="btn btn-warning btn-sm text-white">
+                            <i class="icon-edit"></i> Editar
+                        </a>
+                        <button onclick="confirmacion(event, '/eliminarMantenimiento/{{ mantenimiento.id }}')" class="btn btn-danger btn-sm">
+                            <i class="icon-close"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
-    <script>
-        let table = new DataTable('#tbl_mantenimientos');
-    </script>
+<!-- Inicialización de DataTables en español -->
+<script>
+    $(document).ready(function() {
+        $('#tabla_mantenimientos').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            }
+        });
+    });
+</script>
 {% endblock %}
