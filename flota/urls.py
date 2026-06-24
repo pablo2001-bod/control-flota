@@ -1,22 +1,22 @@
-# Archivo para gestionar las rutas internas de la aplicacion flota
 from django.urls import path
-# Importamos la lógica de negocio de la aplicación
-from . import views
+from flota import views
 
-# Listado de rutas de la Aplicación
 urlpatterns = [
     path('', views.inicio),
     
-    # Rutas Vehículos
+    # URLs de Vehículos
     path('NuevoVehiculo/', views.NuevoVehiculo),
     path('guardarVehiculo/', views.guardarVehiculo),
     path('listadodevehiculos/', views.listadodevehiculos),
-    path('eliminarVehiculo/<int:id>/', views.eliminarVehiculo, name='eliminarVehiculo'),
-    path('editarVehiculo/<int:id>/', views.editarVehiculo, name='editarVehiculo'),
-    path('actualizarVehiculo/', views.actualizarVehiculo, name='actualizarVehiculo'),
+    path('editarVehiculo/<int:id>/', views.editarVehiculo),
+    path('actualizarVehiculo/', views.actualizarVehiculo),
+    path('eliminarVehiculo/<int:id>/', views.eliminarVehiculo),
     
-    # Rutas Mantenimientos
+    # URLs de Mantenimientos
     path('NuevoMantenimiento/', views.NuevoMantenimiento),
     path('guardarMantenimiento/', views.guardarMantenimiento),
     path('listadodemantenimientos/', views.listadodemantenimientos),
+    path('editarMantenimiento/<int:id>/', views.editarMantenimiento),
+    path('actualizarMantenimiento/', views.actualizarMantenimiento),
+    path('eliminarMantenimiento/<int:id>/', views.eliminarMantenimiento),
 ]

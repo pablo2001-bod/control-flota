@@ -30,6 +30,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'</script>
+    
 </head>
 
 <body>
@@ -73,7 +75,6 @@
 
 
     <!-- Navbar Start -->
-    <!-- Navbar Start -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
     <a href="/" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary"><i class="fa fa-car me-3"></i>CarServ</h2>
@@ -91,7 +92,8 @@
     </div>
 </nav>
 <!-- Navbar End -->
-    <!-- Navbar End -->
+   {% block contenido %}
+    {% endblock %}
 
 
     <!-- Carousel Start -->
@@ -533,7 +535,7 @@
     <script src="{% static 'flota/js/main.js' %}"></script>
 
 
-{% if messages %}
+    {% if messages %}
             {% for message in messages %}
                 <script>
                     Swal.fire({
@@ -556,5 +558,6 @@
         border: 1px solid red;
     }
 </style>
+
 </body>
 </html>

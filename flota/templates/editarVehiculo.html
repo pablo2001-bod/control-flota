@@ -1,0 +1,39 @@
+{% extends "./index.html" %}
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <br>
+                <h1><b>Actualizar Vehículo: {{ vehiculo.placa }}</b></h1>
+                <hr>
+                <form enctype="multipart/form-data" action="/actualizarVehiculo/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ vehiculo.id }}">
+                    
+                    <b>Placa:</b> <br>
+                    <input value="{{ vehiculo.placa }}" class="form-control" type="text" name="placa" required>
+                    <br>
+                    <b>Tipo de Vehículo:</b> <br>
+                    <input value="{{ vehiculo.tipo_vehiculo }}" class="form-control" type="text" name="tipo_vehiculo" required>
+                    <br>
+                    <b>Tipo de Combustible:</b> <br>
+                    <input value="{{ vehiculo.tipo_combustible }}" class="form-control" type="text" name="tipo_combustible" required>
+                    <br>
+                    <b>Año del Modelo:</b> <br>
+                    <input value="{{ vehiculo.anio_modelo }}" class="form-control" type="number" name="anio_modelo" required>
+                    <br>
+                    <b>Fotografía:</b> <br>
+                    {% if vehiculo.foto %}
+                        <img src="{{ vehiculo.foto.url }}" width="120" class="img-thumbnail my-2"><br>
+                    {% endif %}
+                    <input type="file" name="foto" id="foto" class="form-control">
+                    <br>
+                    <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> Actualizar Cambios</button>
+                    <a href="/listadodevehiculos/" class="btn btn-secondary">Cancelar</a>
+                </form>
+                <br>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -121,6 +121,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'flota/static/'),)
 
-# configuracion para subir y manipular archivos multimedia (Fotos de autos y PDFs)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = (os.path.join(BASE_DIR, 'flota/media/'))

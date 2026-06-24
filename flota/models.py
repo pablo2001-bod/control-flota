@@ -1,4 +1,7 @@
+import os
 from django.db import models
+from django.db.models.signals import post_delete  
+from django.dispatch import receiver              
 
 class Vehiculo(models.Model):
     placa = models.CharField(max_length=20, unique=True)
@@ -20,3 +23,14 @@ class Mantenimiento(models.Model):
 
     def __str__(self):
         return f"{self.tipo_mantenimiento} - {self.fecha_servicio}"
+
+
+@receiver(post_delete, sender=Vehiculo)
+def eliminar_foto_vehiculo_al_borrar(sender, instance, **kwargs):
+    if instance.foto and os.path.isfile(instance.foto.path):
+        os.remove(instance.foto.path)
+
+@receiver(post_delete, sender=Mantenimiento)
+def eliminar_pdf_mantenimiento_al_borrar(sender, instance, **kwargs):
+    if instance.pdf_diagnostico and os.path.isfile(instance.pdf_diagnostico.path):
+        os.remove(instance.pdf_diagnostico.path)

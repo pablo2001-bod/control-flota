@@ -1,147 +1,71 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <title>Control de Flota - Listado de Vehículos</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Estilos de Sportz -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
-    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <!-- CDN de DataTables CSS -->
-    <link rel="stylesheet" href="//cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
-
-    <!-- Scripts Base -->
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <!-- CDN de DataTables JS -->
-    <script src="//cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
-    <!-- CDN de SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-
-    <div class="site-wrap">
-        <!-- Encabezado -->
-        <div class="site-navbar bg-dark py-2">
-            <div class="container d-flex justify-content-between align-items-center">
-                <h2 class="text-white mb-0">Gestión de Flota - Vehículos</h2>
-                <a href="/NuevoVehiculo/" class="btn btn-success btn-sm">Agregar Vehículo</a>
-            </div>
-        </div>
-
-        <!-- Tabla de Datos -->
-        <div class="container my-5">
-            <div class="card p-4 shadow">
-                <h3 class="mb-4 text-black text-center">Listado General de la Flota</h3>
-
-                <div class="table-responsive">
-                    <table id="tablaVehiculos" class="table table-striped table-bordered text-black">
-                        <thead class="bg-primary text-white">
-                            <tr>
-                                <th>Foto</th>
-                                <th>Placa</th>
-                                <th>Tipo</th>
-                                <th>Combustible</th>
-                                <th>Seguro Vigente</th>
-                                <th>Año</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for v in vehiculos %}
-                            <tr>
-                                <td>
-                                    {% if v.foto %}
-                                        <img src="{{ v.foto.url }}" alt="Fachada" style="width: 80px; height: auto; border-radius: 5px;">
+{% extends 'index.html' %}
+{% block contenido %}
+    <div class="container-fluid px-4"> 
+        <center>
+            <br> 
+            <h1 class="mb-4 text-dark"><b>Bienvenido a la sección de Vehículos</b>
+                <a href="/NuevoVehiculo/" class="btn btn-info"><i class="fa fa-plus-circle"></i> Nuevo Vehículo</a>
+            </h1>
+            <hr>
+        </center>
+        <br>
+    
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <table id="tbl_vehiculos" class="table table-hover table-striped table-bordered align-middle text-dark">
+                    <thead class="table-dark"> 
+                        <tr>
+                            <th>ID</th>
+                            <th>Placa</th>
+                            <th>Tipo de Vehículo</th>
+                            <th>Año Modelo</th>
+                            <th>Foto</th>
+                            <th style="width: 180px;">Acciones</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vehiculoTem in vehiculos %}
+                        <tr>
+                            <td>{{ vehiculoTem.id }}</td>
+                            <td><b>{{ vehiculoTem.placa }}</b></td>
+                            <td>{{ vehiculoTem.tipo_vehiculo }} ({{ vehiculoTem.tipo_combustible }})</td>
+                            <td>{{ vehiculoTem.anio_modelo }}</td>
+                            <td class="text-center">
+                                {% if vehiculoTem.foto %}
+                                    <img src="{{ vehiculoTem.foto.url }}" alt="Foto del Vehículo" width="100" class="img-thumbnail">
+                                {% else %}
+                                    <span class="text-muted small">No hay foto</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <a href="/editarVehiculo/{{ vehiculoTem.id }}/" class="btn btn-warning btn-sm flex-fill text-center" title="Editar">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="/eliminarVehiculo/{{ vehiculoTem.id }}/" onclick="return confirm('¿Seguro que quieres eliminar este vehículo?');" class="btn btn-danger btn-sm flex-fill text-center" title="Eliminar">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                    {% if vehiculoTem.foto %}                                     
+                                        <a class="btn btn-sm btn-outline-info" href="{{ vehiculoTem.foto.url }}" target="_blank"><i class="fa fa-image"></i></a>    
+                                        <a class="btn btn-sm btn-outline-dark" href="{{ vehiculoTem.foto.url }}" download><i class="fa fa-download"></i></a>                             
                                     {% else %}
-                                        <span class="badge badge-secondary">Sin foto</span>
+                                        <button class="btn btn-sm btn-outline-secondary disabled" type="button"><i class="fa fa-image"></i></button>    
+                                        <button class="btn btn-sm btn-outline-secondary disabled" type="button"><i class="fa fa-download"></i></button>  
                                     {% endif %}
-                                </td>
-                                <td class="font-weight-bold">{{ v.placa }}</td>
-                                <td>{{ v.tipo_vehiculo }}</td>
-                                <td>{{ v.tipo_combustible }}</td>
-                                <td>
-                                    {% if v.seguro_vigente %}
-                                        <span class="badge badge-success">Sí</span>
-                                    {% else %}
-                                        <span class="badge badge-danger">No</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ v.anio_modelo }}</td>
-                                <td>
-                                    <a href="{% url 'editarVehiculo' v.id %}" class="btn btn-warning btn-sm">Editar</a>
-                                    <!-- Mandamos llamar la función JS para borrar con SweetAlert -->
-                                    <button onclick="confirmarEliminacion('{{ v.id }}', '{{ v.placa }}')" class="btn btn-danger btn-sm">Eliminar</button>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="7" class="text-center">No hay vehículos registrados en el sistema.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody> 
+                </table> 
+            </div> 
+        </div> 
     </div>
-
-    <!-- Inicialización de DataTables y SweetAlert2 -->
-    <script>
-        $(document).ready(function() {
-            // Activamos DataTables en español básico
-            $('#tablaVehiculos').DataTable({
-                language: {
-                    search: "Buscar:",
-                    lengthMenu: "Mostrar _MENU_ registros",
-                    info: "Mostrando _START_ a _END_ de _TOTAL_ vehículos",
-                    paginate: {
-                        first: "Primero",
-                        previous: "Anterior",
-                        next: "Siguiente",
-                        last: "Último"
-                    }
-                }
-            });
-        });
-
-        // Alerta interactiva para eliminar un auto
-        function confirmarEliminacion(id, placa) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Vas a eliminar el vehículo con placa: " + placa,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirecciona a la ruta de eliminación de Django
-                    window.location.href = "/eliminarVehiculo/" + id + "/";
-                }
-            })
+<script>
+    let tablaVehiculos = new DataTable('#tbl_vehiculos', {
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
         }
-    </script>
-
-    <!-- Script para cachar mensajes de éxito (como cuando guardas un vehículo) -->
-    {% if messages %}
-        {% for message in messages %}
-            <script>
-                Swal.fire({
-                    title: '¡Operación Exitosa!',
-                    text: "{{ message }}",
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-            </script>
-        {% endfor %}
-    {% endif %}
-
-</body>
-</html>
+    });
+</script>
+{% endblock %}

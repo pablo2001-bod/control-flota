@@ -31,6 +31,5 @@ urlpatterns = [
     path('', include('flota.urls')), # Incluye las rutas de tu app flota
 ]
 
-# habilitando el acceso a los archivos multimedia en modo desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

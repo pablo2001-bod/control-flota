@@ -1,107 +1,50 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <title>Control de Flota - Nuevo Vehículo</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
-    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-
-    <div class="site-wrap">
-        <div class="site-navbar bg-dark py-2">
-            <div class="container">
-                <h2 class="text-white mb-0">Gestión de Flota - Vehículos</h2>
-            </div>
-        </div>
-
-        <div class="container my-5">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card p-4 shadow">
-                        <h3 class="mb-4 text-black text-center">Registrar Nuevo Vehículo</h3>
-                        
-                        <form action="/guardarVehiculo/" method="POST" id="formVehiculo" enctype="multipart/form-data">
-                            {% csrf_token %}
-
-                            <div class="form-group mb-3">
-                                <label for="placa" class="text-black fw-bold">Placa:</label>
-                                <input type="text" name="placa" id="placa" class="form-control" required placeholder="Ej: ABC-1234">
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="tipo_vehiculo" class="text-black fw-bold">Tipo de Vehículo:</label>
-                                <select name="tipo_vehiculo" id="tipo_vehiculo" class="form-control" required>
-                                    <option value="">-- Seleccione una opción --</option>
-                                    <option value="Sedán">Sedán</option>
-                                    <option value="Camioneta">Camioneta</option>
-                                    <option value="Camión">Camión</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="text-black fw-bold d-block">Tipo de Combustible:</label>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="tipo_combustible" id="gasolina" value="Gasolina" checked>
-                                    <label class="form-check-label text-black" for="gasolina">Gasolina</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="tipo_combustible" id="diesel" value="Diésel">
-                                    <label class="form-check-label text-black" for="diesel">Diésel</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="tipo_combustible" id="electrico" value="Eléctrico">
-                                    <label class="form-check-label text-black" for="electrico">Eléctrico</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group form-check mb-3">
-                                <input type="checkbox" name="seguro" id="seguro" class="form-check-input">
-                                <label class="form-check-label text-black fw-bold" for="seguro">¿Tiene seguro vigente?</label>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="anio_modelo" class="text-black fw-bold">Año del Modelo:</label>
-                                <input type="number" name="anio_modelo" id="anio_modelo" class="form-control" required min="1900" max="2027">
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <label for="foto" class="text-black fw-bold">Foto Real del Vehículo:</label>
-                                <input type="file" name="foto" id="foto" class="form-control-file" accept="image/*">
-                            </div>
-
-                            <button type="submit" class="btn btn-primary btn-block py-2">Guardar Vehículo</button>
-                        </form>
-                    </div>
-                </div>
+{% extends "index.html" %}
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <br>
+                <h1><b>Registrar Nuevo Vehículo</b></h1>
+                <hr>
+                <form enctype="multipart/form-data" id="formulario_vehiculo" action="/guardarVehiculo/" method="post">
+                    {% csrf_token %}
+                    <b>Placa:</b> <br>
+                    <input placeholder="Ej: ABC-1234" class="form-control" type="text" name="placa" >
+                    <br>
+                    <b>Tipo de Vehículo:</b> <br>
+                    <input placeholder="Ej: Sedán, Camioneta, Camión" class="form-control" type="text" name="tipo_vehiculo" >
+                    <br>
+                    <b>Tipo de Combustible:</b> <br>
+                    <input placeholder="Ej: Gasolina, Diésel, Eléctrico" class="form-control" type="text" name="tipo_combustible" >
+                    <br>
+                    <b>Año del Modelo:</b> <br>
+                    <input placeholder="Ej: 2024" class="form-control" type="number" name="anio_modelo" >
+                    <br>
+                    <b>Fotografía:</b> <br>
+                    <input type="file" name="foto" id="foto" class="form-control">
+                    <br>
+                    <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> Guardar</button>
+                    <a href="/listadodevehiculos/" class="btn btn-secondary"> Cancelar</a>
+                </form>
+                <br>
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $("#formVehiculo").validate({
-                rules: {
-                    placa: { required: true, minlength: 6 },
-                    tipo_vehiculo: { required: true },
-                    anio_modelo: { required: true, number: true }
-                },
-                messages: {
-                    placa: "Por favor, ingrese una placa válida (mínimo 6 caracteres).",
-                    tipo_vehiculo: "Seleccione un tipo de vehículo.",
-                    anio_modelo: "Ingrese un año numérico válido."
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+<script>
+     $("#formulario_vehiculo").validate({
+        rules: {
+            placa: { required: true, minlength: 7 },
+            tipo_vehiculo: { required: true },
+            tipo_combustible: { required: true },
+            anio_modelo: { required: true, min: 1950, max: 2027 }
+        },
+        messages: { 
+            placa: { required: "Ingrese la placa", minlength: "Mínimo 7 caracteres" },
+            tipo_vehiculo: { required: "Ingrese el tipo de vehículo" },
+            tipo_combustible: { required: "Ingrese el tipo de combustible" },
+            anio_modelo: { required: "Ingrese el año", min: "Año inválido", max: "Año excedido" }
+        }
+    })
+</script>
+{% endblock %}
