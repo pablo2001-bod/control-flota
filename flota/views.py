@@ -2,39 +2,83 @@ import os
 from django.shortcuts import render, redirect
 from .models import Vehiculo, Mantenimiento
 from django.contrib import messages 
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError  # Control de placas duplicadas
+
+# --- SISTEMA DE AUTENTICACIÓN (LOGIN/LOGOUT) ---
+
+def login_vista(request):
+    mensaje = ""
+    if request.method == 'POST':
+        usuario_txt = request.POST.get('username')
+        clave_txt = request.POST.get('password')
+        user = authenticate(request, username=usuario_txt, password=clave_txt)
+        if user is not None:
+            login(request, user)
+            return redirect('/')  # Redirige directo a la raíz del sistema
+        else:
+            mensaje = "Usuario o contraseña incorrectos."
+            
+    return render(request, 'login.html', {'mensaje': mensaje})
+
+def logout_vista(request):
+    logout(request)
+    return redirect('login')
 
 
+# --- VISTA DE INICIO (CON CONTROL DE ROLES) ---
+
+@login_required(login_url='login')
 def inicio(request):
-    return render(request, 'inicio.html')
+    es_gerente = request.user.groups.filter(name='Gerente').exists()
+    es_chofer = request.user.groups.filter(name='Chofer').exists()
+    
+    contexto = {
+        'es_gerente': es_gerente,
+        'es_chofer': es_chofer
+    }
+    return render(request, 'inicio.html', contexto)
 
-#Vehiculo
 
+# --- SECCIÓN VEHÍCULOS ---
+
+@login_required(login_url='login')
 def NuevoVehiculo(request):
     return render(request, 'NuevoVehiculo.html')
 
+@login_required(login_url='login')
 def guardarVehiculo(request):
     if request.method == "POST":
-        placa_val = request.POST["placa"]
+        placa_val = request.POST["placa"].strip().upper()
         tipo_vehiculo_val = request.POST["tipo_vehiculo"]
         tipo_combustible_val = request.POST["tipo_combustible"]
         anio_modelo_val = request.POST["anio_modelo"]
         seguro_vigente_val = 'seguro_vigente' in request.POST
         foto_val = request.FILES.get('foto')
         
-        Vehiculo.objects.create(
-            placa=placa_val,
-            tipo_vehiculo=tipo_vehiculo_val,
-            tipo_combustible=tipo_combustible_val,
-            seguro_vigente=seguro_vigente_val,
-            anio_modelo=int(anio_modelo_val),
-            foto=foto_val
-        )
-        
-        messages.success(request, 'Vehículo guardado exitosamente en la flota.') 
-        return redirect('/listadodevehiculos/')
+        try:
+            Vehiculo.objects.create(
+                placa=placa_val,
+                tipo_vehiculo=tipo_vehiculo_val,
+                tipo_combustible=tipo_combustible_val,
+                seguro_vigente=seguro_vigente_val,
+                anio_modelo=int(anio_modelo_val),
+                foto=foto_val
+            )
+            messages.success(request, 'Vehículo guardado exitosamente en la flota.') 
+            return redirect('/listadodevehiculos/')
+        except IntegrityError:
+            messages.error(request, f'Error: Ya existe un vehículo registrado con la placa {placa_val}.')
+            return redirect('/NuevoVehiculo/')
+            
     return redirect('/listadodevehiculos/')
 
+@login_required(login_url='login')
 def listadodevehiculos(request):
+    es_gerente = request.user.groups.filter(name='Gerente').exists()
+    es_chofer = request.user.groups.filter(name='Chofer').exists()
+    
     vehiculos_db = Vehiculo.objects.all()
     vehiculos_procesados = []
     alertas_presupuesto = []
@@ -64,19 +108,23 @@ def listadodevehiculos(request):
             
     return render(request, 'listadodevehiculos.html', {
         'vehiculos': vehiculos_procesados,
-        'alertas': alertas_presupuesto
+        'alertas': alertas_presupuesto,
+        'es_gerente': es_gerente,
+        'es_chofer': es_chofer
     })
 
+@login_required(login_url='login')
 def editarVehiculo(request, id):
     vehiculo = Vehiculo.objects.get(id=id) 
     return render(request, 'editarVehiculo.html', {'vehiculo': vehiculo})
 
+@login_required(login_url='login')
 def actualizarVehiculo(request):
     if request.method == "POST":
         id_val = request.POST["id"]
         vehiculo = Vehiculo.objects.get(id=id_val)
         
-        vehiculo.placa = request.POST["placa"]
+        vehiculo.placa = request.POST["placa"].strip().upper()
         vehiculo.tipo_vehiculo = request.POST["tipo_vehiculo"]
         vehiculo.tipo_combustible = request.POST["tipo_combustible"]
         vehiculo.anio_modelo = request.POST["anio_modelo"]
@@ -84,41 +132,40 @@ def actualizarVehiculo(request):
         
         nueva_foto = request.FILES.get('foto')
         if nueva_foto: 
-            if vehiculo.foto and os.path.isfile(vehiculo.foto.path):
-                os.remove(vehiculo.foto.path) 
+            # Corrección: Uso de os.path.exists para asegurar la eliminación física en el servidor
+            if vehiculo.foto and os.path.exists(vehiculo.foto.path):
+                try:
+                    os.remove(vehiculo.foto.path) 
+                except Exception:
+                    pass
             vehiculo.foto = nueva_foto
             
         vehiculo.save()
         messages.success(request, f"¡El vehículo {vehiculo.placa} ha sido actualizado correctamente!")
     return redirect('/listadodevehiculos/')
 
+@login_required(login_url='login')
 def eliminarVehiculo(request, id):
-    # Capturar el ID
-    # El primer parametro id es el de la BDD
-    # El segundo es el que acompaña a request osea la variable
     vehiculoEliminado = Vehiculo.objects.get(id=id)
-    
-    # si el vehículo tiene foto y el archivo físico existe en el servidor
-    # lo borramos
-    # "os.path.exists"
-    # Verifica si la foto realmente existe en la carpeta antes de hacer nada.
-    # Evita que el sistema falle.
     if vehiculoEliminado.foto and os.path.exists(vehiculoEliminado.foto.path):
-        # "os.remove"
-        # Borra la foto físicamente del disco duro para que no ocupe espacio
-        # innecesario (elimina la basura).
-        os.remove(vehiculoEliminado.foto.path)
+        try:
+            os.remove(vehiculoEliminado.foto.path)
+        except Exception:
+            pass
         
     vehiculoEliminado.delete()
     messages.success(request, 'Vehículo Eliminado Exitosamente')
-    return redirect('/listadodevehiculos')
+    return redirect('/listadodevehiculos/')
 
-#Mantenimiento
+
+# --- SECCIÓN MANTENIMIENTOS ---
  
+@login_required(login_url='login')
 def NuevoMantenimiento(request):
     vehiculos = Vehiculo.objects.all()
     return render(request, 'NuevoMantenimiento.html', {'vehiculos': vehiculos})
 
+@login_required(login_url='login')
 def guardarMantenimiento(request):
     if request.method == "POST":
         vehiculo_id = request.POST["vehiculo_id"]
@@ -137,20 +184,27 @@ def guardarMantenimiento(request):
         return redirect('/listadodemantenimientos/')
     return redirect('/listadodemantenimientos/')
 
+@login_required(login_url='login')
 def listadodemantenimientos(request):
+    es_gerente = request.user.groups.filter(name='Gerente').exists()
+    es_chofer = request.user.groups.filter(name='Chofer').exists()
     mantenimientos = Mantenimiento.objects.all() 
-    return render(request, 'listadodemantenimientos.html', {'mantenimientos': mantenimientos})
+    return render(request, 'listadodemantenimientos.html', {
+        'mantenimientos': mantenimientos,
+        'es_gerente': es_gerente,
+        'es_chofer': es_chofer
+    })
 
+@login_required(login_url='login')
 def editarMantenimiento(request, id):
     mantenimiento = Mantenimiento.objects.get(id=id) 
-    #Agrega esta línea para traer los vehículos
     vehiculos = Vehiculo.objects.all() 
     return render(request, 'editarMantenimiento.html', {
         'mantenimiento': mantenimiento,
-        #Se los pasamos al HTML
         'vehiculos': vehiculos 
     })
 
+@login_required(login_url='login')
 def actualizarMantenimiento(request):
     if request.method == "POST":
         id_val = request.POST["id"]
@@ -163,25 +217,27 @@ def actualizarMantenimiento(request):
         
         nuevo_pdf = request.FILES.get('pdf_diagnostico')
         if nuevo_pdf:
-            if mantenimiento.pdf_diagnostico and os.path.isfile(mantenimiento.pdf_diagnostico.path):
-                os.remove(mantenimiento.pdf_diagnostico.path)
+            # Corrección: Uso de os.path.exists para asegurar la eliminación física del PDF anterior
+            if mantenimiento.pdf_diagnostico and os.path.exists(mantenimiento.pdf_diagnostico.path):
+                try:
+                    os.remove(mantenimiento.pdf_diagnostico.path)
+                except Exception:
+                    pass
             mantenimiento.pdf_diagnostico = nuevo_pdf
             
         mantenimiento.save()
         messages.success(request, f"¡El registro de mantenimiento ID {mantenimiento.id} ha sido actualizado correctamente!")
     return redirect('/listadodemantenimientos/')  
 
+@login_required(login_url='login')
 def eliminarMantenimiento(request, id):
     mantenimiento = Mantenimiento.objects.get(id=id)
-    
-    # SI EL MANTENIMIENTO TIENE PDF Y EL ARCHIVO FÍSICO EXISTE EN EL SERVIDOR LO BORRAMOS
-    # "os.path.exists" Verifica si el PDF realmente existe en la carpeta antes de hacer nada.
     if mantenimiento.pdf_diagnostico and os.path.exists(mantenimiento.pdf_diagnostico.path):
-        # "os.remove" Borra el PDF físicamente del disco duro para que no ocupe espacio innecesario.
-        os.remove(mantenimiento.pdf_diagnostico.path)
+        try:
+            os.remove(mantenimiento.pdf_diagnostico.path)
+        except Exception:
+            pass
         
-    # Una vez borrado el archivo del disco duro, eliminamos el registro de la Base de Datos
     mantenimiento.delete()
-    
     messages.success(request, f"¡El registro de mantenimiento ID {id} ha sido eliminado correctamente!")
     return redirect('/listadodemantenimientos/')

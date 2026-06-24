@@ -47,12 +47,12 @@
                     <br>
                     
                     <b>Subir Nuevo Diagnóstico PDF (Opcional):</b> <br>
-                    <input id="foto" class="form-control" type="file" name="pdf_diagnostico" accept="application/pdf">
+                    <input id="pdf_diagnostico" class="form-control" type="file" name="pdf_diagnostico" accept="application/pdf">
                     <br>
 
                     <div style="text-align: center;">
-                        <button class="btn btn-success" type="submit"><i class="icon-edit"></i> Actualizar</button>
-                        <a href="/listadodemantenimientos" class="btn btn-danger"><i class="icon-close"></i> Cancelar</a>
+                        <button class="btn btn-success" type="submit"><i class="fas fa-edit"></i> Actualizar</button>
+                        <a href="/listadodemantenimientos" class="btn btn-danger"><i class="fas fa-times"></i> Cancelar</a>
                     </div>
                 </form>
                 <br>
@@ -61,23 +61,13 @@
     </div>
 
     <script>
-    $("#foto").fileinput({
+    $("#pdf_diagnostico").fileinput({
         language: "es",
         allowedFileExtensions: ["pdf"],
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-        initialPreview: [
-            "{{ mantenimiento.pdf_diagnostico.url }}"
-        ],
-        initialPreviewAsData: true,
-        initialPreviewFileType: 'pdf',
-        initialPreviewConfig: [
-            { type: "pdf", description: "Diagnóstico Actual", key: 1 }
-        ],
-        previewSettings: {
-            pdf: { width: "100%", height: "260px" }
-        },
+        // Removido el preview inicial conflictivo para asegurar el reemplazo físico en el servidor
         overwriteInitial: true
     });
     $(".fileinput-upload").hide();

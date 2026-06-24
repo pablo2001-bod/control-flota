@@ -7,75 +7,95 @@
                 <br>
                 <h1><b>Registrar Nuevo Vehículo</b></h1>
                 <hr>
-                <form enctype="multipart/form-data" id="form_nuevo_estadio" action="/guardarVehiculo/" method="post">
+                <form enctype="multipart/form-data" id="form_nuevo_vehiculo" action="/guardarVehiculo/" method="post">
                     {% csrf_token %}
+                    
                     <b>Placa:</b> <br>
-                    <input required minlength="7" maxlength="10" placeholder="Ingrese la placa del vehículo" class="form-control" type="text" name="placa">
+                    <input required minlength="7" maxlength="10" placeholder="Ingrese la placa del vehículo (Ej: PBC-1234)" class="form-control" type="text" name="placa">
                     <br>
+                    
                     <b>Tipo Vehículo:</b> <br>
-                    <input required placeholder="Ingrese el tipo de vehículo" class="form-control" type="text" name="tipo_vehiculo">
+                    <select required class="form-control" name="tipo_vehiculo">
+                        <option value="" disabled selected>--- Seleccione el Tipo ---</option>
+                        <option value="Sedán">Sedán</option>
+                        <option value="Camioneta">Camioneta</option>
+                        <option value="Camión">Camión</option>
+                    </select>
                     <br>
+                    
                     <b>Tipo Combustible:</b> <br>
-                    <input required placeholder="Ingrese el tipo de combustible" class="form-control" type="text" name="tipo_combustible">
+                    <div class="mt-2">
+                        <input type="radio" id="gasolina" name="tipo_combustible" value="Gasolina" checked>
+                        <label for="gasolina" class="me-3">Gasolina</label>
+                        
+                        <input type="radio" id="diesel" name="tipo_combustible" value="Diésel">
+                        <label for="diesel" class="me-3">Diésel</label>
+                        
+                        <input type="radio" id="electrico" name="tipo_combustible" value="Eléctrico">
+                        <label for="electrico">Eléctrico</label>
+                    </div>
                     <br>
+                    
                     <b>Año Modelo:</b> <br>
-                    <input required placeholder="Ingrese el año del modelo" class="form-control" type="number" name="anio_modelo">
+                    <input required placeholder="Ingrese el año del modelo" class="form-control" type="number" name="anio_modelo" min="1950" max="2027">
                     <br>
+                    
                     <b>¿Seguro Vigente?</b> <br>
                     <input type="checkbox" name="seguro_vigente" value="True" style="transform: scale(1.2); margin-top: 5px;">
                     <br><br>
-                    <b>Fotografía</b>
-                    <input type="file" name="foto" id="foto">
+                    
+                    <b>Fotografía de la Fachada:</b>
+                    <input type="file" name="foto" id="foto" class="form-control">
                     <br> <br>
-                    <div style="text-align: center; ">
-                    <button class="btn btn-success" type="submit"> <i class="icon-save"></i> Guardar</button>
-                    <a href="/listadodevehiculos" class="btn btn-danger"> <i class="icon-close"></i> Cancelar</a>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> Guardar</button>
+                        <a href="/listadodevehiculos/" class="btn btn-danger"> <i class="fa fa-times"></i> Cancelar</a>
                     </div>
                 </form>
-
                 <br>
             </div>
         </div>
     </div>
+
     <script>
-        $("#form_nuevo_estadio").validate({
-            reules:{
-                placa:{
-                    required:true,
+        // Corrección de "reules" a "rules" para evitar que falle la validación
+        $("#form_nuevo_vehiculo").validate({
+            rules: {
+                placa: {
+                    required: true,
                 },
-                anio_modelo:{
-                    number:true,
-                    required:true
+                anio_modelo: {
+                    number: true,
+                    required: true
                 },
-                tipo_vehiculo:{
-                    required:true
+                tipo_vehiculo: {
+                    required: true
                 }
             },
-            messages:{
-                placa:{
-                    required:"Por favor ingrese la placa del vehículo",
+            messages: {
+                placa: {
+                    required: "Por favor ingrese la placa del vehículo",
                 },
-                anio_modelo:{
-                    required:"Por favor ingrese el año del modelo",
-                    number: "Por favor ingrese números validos"
+                anio_modelo: {
+                    required: "Por favor ingrese el año del modelo",
+                    number: "Por favor ingrese números válidos"
                 },
-                tipo_vehiculo:{
-                    required:"Por favor ingrese el tipo de vehículo"
+                tipo_vehiculo: {
+                    required: "Por favor seleccione el tipo de vehículo"
                 }
-
             }
         });
     </script>
     
     <script>
-          $("#foto").fileinput({
+        $("#foto").fileinput({
             language: "es",
-            allowedFileExtensions: ["png|jpg|jpeg"],
+            allowedFileExtensions: ["png", "jpg", "jpeg"],
             showCaption: false,
             dropZoneEnabled: true,
             showClose: false
         });
         $(".fileinput-upload").hide();
     </script>
-     
  {% endblock %}
