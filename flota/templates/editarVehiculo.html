@@ -27,7 +27,7 @@
                     {% if vehiculo.foto %}
                         <img src="{{ vehiculo.foto.url }}" width="120" class="img-thumbnail my-2"><br>
                     {% endif %}
-                    <input type="file" name="foto" id="foto" class="form-control">
+                    <input type="file" name="foto" id="foto" class="form-control validar-imagen">
                     <br>
                     <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> Actualizar Cambios</button>
                     <a href="/listadodevehiculos/" class="btn btn-secondary">Cancelar</a>

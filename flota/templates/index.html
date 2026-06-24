@@ -559,5 +559,32 @@
     }
 </style>
 
+<script>
+document.addEventListener('change', function(e) {
+    
+    if (e.target && e.target.classList.contains('validar-imagen')) {
+        var archivo = e.target.files[0];
+        if (archivo) {
+            var nombreArchivo = archivo.name.toLowerCase();
+            var tipoArchivo = archivo.type;
+
+            // Lista de extensiones e MIME types permitidos para imágenes
+            var extensionesValidas = ['.jpg', '.jpeg', '.png', ];
+            var esImagenValida = extensionesValidas.some(ext => nombreArchivo.endsWith(ext)) && tipoArchivo.startsWith('image/');
+
+            if (!esImagenValida) {
+                Swal.fire({
+                    title: '¡Archivo de Imagen Inválido!',
+                    text: 'En este campo solo se permiten fotos e imágenes reales (JPG, JPEG, PNG).',
+                    icon: 'error',
+                    confirmButtonColor: '#0F172A'
+                });
+                e.target.value = ''; // Resetea el campo inmediatamente
+            }
+        }
+    }
+
+});
+</script>
 </body>
 </html>
