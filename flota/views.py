@@ -6,7 +6,7 @@ from .models import Vehiculo, Mantenimiento
 def inicio(request):
     return render(request, 'inicio.html')
 
-# ==================== MÓDULO VEHÍCULOS ====================
+#Vehiculo
 
 def NuevoVehiculo(request):
     return render(request, 'NuevoVehiculo.html')
@@ -97,9 +97,8 @@ def eliminarVehiculo(request, id):
     messages.success(request, f"¡El vehículo {vehiculo.placa} ha sido eliminado de la flota correctamente!")
     return redirect('/listadodevehiculos/')
 
-
-# ==================== MÓDULO MANTENIMIENTOS ====================
-
+#Mantenimiento
+ 
 def NuevoMantenimiento(request):
     vehiculos = Vehiculo.objects.all()
     return render(request, 'NuevoMantenimiento.html', {'vehiculos': vehiculos})
@@ -128,7 +127,13 @@ def listadodemantenimientos(request):
 
 def editarMantenimiento(request, id):
     mantenimiento = Mantenimiento.objects.get(id=id) 
-    return render(request, 'editarMantenimiento.html', {'mantenimiento': mantenimiento})
+    #Agrega esta línea para traer los vehículos
+    vehiculos = Vehiculo.objects.all() 
+    return render(request, 'editarMantenimiento.html', {
+        'mantenimiento': mantenimiento,
+        #Se los pasamos al HTML
+        'vehiculos': vehiculos 
+    })
 
 def actualizarMantenimiento(request):
     if request.method == "POST":

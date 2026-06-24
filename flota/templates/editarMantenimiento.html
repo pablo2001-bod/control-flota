@@ -13,8 +13,8 @@
                     <br>
                     
                     <b>Vehículo (Placa):</b> <br>
-                    <select class="form-control" name="vehiculo">
-                        {% for vehiculo in misVehiculos %}
+                    <select class="form-control" name="vehiculo_id">
+                        {% for vehiculo in vehiculos %}
                             <option value="{{ vehiculo.id }}" {% if vehiculo.id == mantenimiento.vehiculo.id %}selected{% endif %}>
                                 {{ vehiculo.placa }}
                             </option>
@@ -22,37 +22,44 @@
                     </select>
                     <br>
                     
-                    <b>Fecha:</b> <br>
-                    <input value="{{mantenimiento.fecha|date:'Y-m-d'}}" class="form-control" type="date" name="fecha">
+                    <b>Fecha del servicio:</b> <br>
+                    <input value="{{mantenimiento.fecha_servicio|date:'Y-m-d'}}" class="form-control" type="date" name="fecha_servicio">
                     <br>
                     
-                    <b>Costo:</b> <br>
-                    <input value="{{mantenimiento.costo}}" placeholder="Ingrese el Nuevo costo" class="form-control" type="number" step="0.01" name="costo">
+                    <b>Costo del taller:</b> <br>
+                    <input value="{{mantenimiento.costo_taller}}" placeholder="Ingrese el Nuevo costo" class="form-control" type="number" step="0.01" name="costo_taller">
                     <br>
                     
-                    <b>Tipo Mantenimiento:</b> <br>
-                    <input value="{{mantenimiento.tipo_mantenimiento}}" placeholder="Ingrese el Nuevo tipo de mantenimiento" class="form-control" type="text" name="tipo_mantenimiento">
-                    <br>
+                    <b>Tipo de mantenimiento:</b> <br>
+                    <div class="form-check form-check-inline">
+                        <input {% if mantenimiento.tipo_mantenimiento == "Preventivo" %}checked{% endif %} required class="form-check-input" type="radio" name="tipo_mantenimiento" id="preventivo" value="Preventivo">
+                        <label class="form-check-label" for="preventivo">Preventivo</label>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <div class="form-check form-check-inline">
+                        <input {% if mantenimiento.tipo_mantenimiento == "Correctivo" %}checked{% endif %} required class="form-check-input" type="radio" name="tipo_mantenimiento" id="correctivo" value="Correctivo">
+                        <label class="form-check-label" for="correctivo">Correctivo</label>
+                    </div>
+                    <br><br>
 
-                    <b>Repuestos / Detalles:</b> <br>
-                    <textarea class="form-control" name="repuestos_detalles" rows="3">{{mantenimiento.repuestos_detalles}}</textarea>
+                    <b>Repuestos cambiados:</b> <br>
+                    <textarea class="form-control" name="repuestos_cambiados" rows="3">{{mantenimiento.repuestos_cambiados}}</textarea>
                     <br>
                     
                     <b>Subir Nuevo Diagnóstico PDF (Opcional):</b> <br>
-                    <input id="foto" class="form-control" type="file" name="diagnostico_pdf" accept="application/pdf">
+                    <input id="foto" class="form-control" type="file" name="pdf_diagnostico" accept="application/pdf">
                     <br>
 
                     <div style="text-align: center;">
                         <button class="btn btn-success" type="submit"><i class="icon-edit"></i> Actualizar</button>
-                        <a href="/listadodemantenimientos" class="btn btn-danger"><i class="icon-close"></i> Cancelar
-                        </a>
+                        <a href="/listadodemantenimientos" class="btn btn-danger"><i class="icon-close"></i> Cancelar</a>
                     </div>
                 </form>
-
                 <br>
             </div>
         </div>
     </div>
+
     <script>
     $("#foto").fileinput({
         language: "es",
@@ -60,16 +67,21 @@
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-        {% if mantenimiento.diagnostico_pdf %}
+        {% if mantenimiento.pdf_diagnostico %}
         initialPreview: [
-            "{{ mantenimiento.diagnostico_pdf.url }}"
+            "{{ mantenimiento.pdf_diagnostico.url }}"
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'pdf',
+        initialPreviewConfig: [
+            { type: "pdf", description: "Diagnóstico Actual", key: 1 }
+        ],
+        previewSettings: {
+            pdf: { width: "100%", height: "260px" }
+        },
         {% endif %}
         overwriteInitial: true
-        });
-        $(".fileinput-upload").hide();
-            
+    });
+    $(".fileinput-upload").hide();
     </script>
 {% endblock %}

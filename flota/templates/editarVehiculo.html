@@ -51,12 +51,12 @@
         showClose: false,
         {% if vehiculo.foto %}
         initialPreview: [
-            "{{ vehiculo.foto.url }}"
+            "{{ vehiculo.foto.url }}" // Corregido al archivo del vehículo
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
-        overwriteInitial: true
         {% endif %}
+        overwriteInitial: true
     });
     $(".fileinput-upload").hide();
     </script>

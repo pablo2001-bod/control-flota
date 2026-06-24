@@ -29,18 +29,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for mantenimientoTemporal in misMantenimientos %}
+                    {% for mantenimientoTemporal in mantenimientos %}
                         <tr>
                             <td><b>{{mantenimientoTemporal.vehiculo.placa}}</b></td>
-                            <td>{{mantenimientoTemporal.fecha}}</td>
+                            <td>{{mantenimientoTemporal.fecha_servicio}}</td>
                             <td>
-                                <span style="color: #198754; font-weight: bold;">${{mantenimientoTemporal.costo}}</span>
+                                <span style="color: #198754; font-weight: bold;">${{mantenimientoTemporal.costo_taller}}</span>
                             </td>
                             <td>{{mantenimientoTemporal.tipo_mantenimiento}}</td>
-                            <td>{{mantenimientoTemporal.repuestos_detalles}}</td>
+                            <td>{{mantenimientoTemporal.repuestos_cambiados}}</td>
                             <td class="text-center">
-                                {% if mantenimientoTemporal.diagnostico_pdf %}
-                                    <a href="{{ mantenimientoTemporal.diagnostico_pdf.url }}" target="_blank" class="btn btn-outline-danger btn-sm" style="font-size: 11px; font-weight: bold; padding: 4px 8px;">
+                                {% if mantenimientoTemporal.pdf_diagnostico %}
+                                    <a href="{{ mantenimientoTemporal.pdf_diagnostico.url }}" target="_blank" class="btn btn-outline-danger btn-sm" style="font-size: 11px; font-weight: bold; padding: 4px 8px;">
                                         VER FACTURA PDF
                                     </a>
                                 {% else %}
@@ -55,11 +55,11 @@
                                      <i class="fa fa-trash"></i>
                                 </a>
 
-                                {% if mantenimientoTemporal.diagnostico_pdf %}                                     
-                                    <a title="Ver PDF" class="btn btn-outline-info" href="{{ mantenimientoTemporal.diagnostico_pdf.url }}" target="_blank">
+                                {% if mantenimientoTemporal.pdf_diagnostico %}                                     
+                                    <a title="Ver PDF" class="btn btn-outline-info" href="{{ mantenimientoTemporal.pdf_diagnostico.url }}" target="_blank">
                                         <i class="fa fa-image"></i>
                                     </a>    
-                                    <a title="Descargar PDF" class="btn btn-outline-dark" href="{{ mantenimientoTemporal.diagnostico_pdf.url }}" download>
+                                    <a title="Descargar PDF" class="btn btn-outline-dark" href="{{ mantenimientoTemporal.pdf_diagnostico.url }}" download>
                                         <i class="fa fa-download"></i>
                                     </a>                             
                                 {% else %}
