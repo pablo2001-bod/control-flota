@@ -1,44 +1,75 @@
-{% extends "./index.html" %}
+{% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
     <div class="container">
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <br>
-                <h1><b>Actualizar Mantenimiento ID: {{ mantenimiento.id }}</b></h1>
+                <h1><b>Actualizar Mantenimiento</b></h1>
                 <hr>
-                <form enctype="multipart/form-data" action="/actualizarMantenimiento/" method="post">
+                <form action="/actualizarMantenimiento/" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input type="hidden" name="id" value="{{ mantenimiento.id }}">
+                    <input value="{{mantenimiento.id}}" class="form-control" type="hidden" name="id" readonly>
+                    <br>
                     
-                    <b>Fecha del Servicio:</b> <br>
-                    <input value="{{ mantenimiento.fecha_servicio|date:'Y-m-d' }}" class="form-control" type="date" name="fecha_servicio" required>
-                    <br>
-                    <b>Costo del Taller ($):</b> <br>
-                    <input value="{{ mantenimiento.costo_taller }}" class="form-control" type="number" step="0.01" name="costo_taller" required>
-                    <br>
-                    <b>Tipo de Mantenimiento:</b> <br>
-                    <select class="form-control" name="tipo_mantenimiento" required>
-                        <option value="Preventivo" {% if mantenimiento.tipo_mantenimiento == "Preventivo" %}selected{% endif %}>Preventivo</option>
-                        <option value="Correctivo" {% if mantenimiento.tipo_mantenimiento == "Correctivo" %}selected{% endif %}>Correctivo</option>
+                    <b>Vehículo (Placa):</b> <br>
+                    <select class="form-control" name="vehiculo">
+                        {% for vehiculo in misVehiculos %}
+                            <option value="{{ vehiculo.id }}" {% if vehiculo.id == mantenimiento.vehiculo.id %}selected{% endif %}>
+                                {{ vehiculo.placa }}
+                            </option>
+                        {% endfor %}
                     </select>
                     <br>
-                    <b>Repuestos Cambiados / Detalles:</b> <br>
-                    <textarea class="form-control" name="repuestos_cambiados" rows="3" required>{{ mantenimiento.repuestos_cambiados }}</textarea>
+                    
+                    <b>Fecha:</b> <br>
+                    <input value="{{mantenimiento.fecha|date:'Y-m-d'}}" class="form-control" type="date" name="fecha">
                     <br>
-                    <b>Documento Diagnóstico (PDF):</b> <br>
-                    {% if mantenimiento.pdf_diagnostico %}
-                        <div class="mb-2">
-                            <small class="text-success"><i class="fa fa-file-pdf"></i> Archivo guardado actualmente.</small>
-                        </div>
-                    {% endif %}
-                    <input type="file" name="pdf_diagnostico" id="pdf_diagnostico" class="form-control" accept=".pdf">
+                    
+                    <b>Costo:</b> <br>
+                    <input value="{{mantenimiento.costo}}" placeholder="Ingrese el Nuevo costo" class="form-control" type="number" step="0.01" name="costo">
                     <br>
-                    <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> Actualizar Cambios</button>
-                    <a href="/listadodemantenimientos/" class="btn btn-secondary">Cancelar</a>
+                    
+                    <b>Tipo Mantenimiento:</b> <br>
+                    <input value="{{mantenimiento.tipo_mantenimiento}}" placeholder="Ingrese el Nuevo tipo de mantenimiento" class="form-control" type="text" name="tipo_mantenimiento">
+                    <br>
+
+                    <b>Repuestos / Detalles:</b> <br>
+                    <textarea class="form-control" name="repuestos_detalles" rows="3">{{mantenimiento.repuestos_detalles}}</textarea>
+                    <br>
+                    
+                    <b>Subir Nuevo Diagnóstico PDF (Opcional):</b> <br>
+                    <input id="foto" class="form-control" type="file" name="diagnostico_pdf" accept="application/pdf">
+                    <br>
+
+                    <div style="text-align: center;">
+                        <button class="btn btn-success" type="submit"><i class="icon-edit"></i> Actualizar</button>
+                        <a href="/listadodemantenimientos" class="btn btn-danger"><i class="icon-close"></i> Cancelar
+                        </a>
+                    </div>
                 </form>
+
                 <br>
             </div>
         </div>
     </div>
+    <script>
+    $("#foto").fileinput({
+        language: "es",
+        allowedFileExtensions: ["pdf"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false,
+        {% if mantenimiento.diagnostico_pdf %}
+        initialPreview: [
+            "{{ mantenimiento.diagnostico_pdf.url }}"
+        ],
+        initialPreviewAsData: true,
+        initialPreviewFileType: 'pdf',
+        {% endif %}
+        overwriteInitial: true
+        });
+        $(".fileinput-upload").hide();
+            
+    </script>
 {% endblock %}
