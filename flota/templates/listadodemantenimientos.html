@@ -1,71 +1,54 @@
-{% extends 'index.html' %}
+{% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
-    <div class="container-fluid px-4"> 
-        <center>
-            <br> 
-            <h1 class="mb-4 text-dark"><b>Sección de Mantenimientos</b>
-                <a href="/NuevoMantenimiento/" class="btn btn-info"><i class="fa fa-plus-circle"></i> Nuevo Mantenimiento</a>
-            </h1>
-            <hr>
-        </center>
+    <center>
         <br>
-    
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <table id="tbl_mantenimientos" class="table table-hover table-striped table-bordered align-middle text-dark">
-                    <thead class="table-dark"> 
+        <h1><b>Historial de Mantenimientos</b>            
+            <a href="/NuevoMantenimiento/" class="btn btn-info"> 
+                <i class="icon-plus-circle"></i> Registrar Orden
+            </a>        
+        </h1>
+        <hr>
+    </center>
+    <br>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table id="tbl_mantenimientos" class="table table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>VEHÍCULO</th>  
+                        <th>FECHA</th>   
+                        <th>COSTO</th>   
+                        <th>TIPO MANTENIMIENTO</th>   
+                        <th>REPUESTOS / DETALLES</th>       
+                        <th>DIAGNÓSTICO (PDF)</th>               
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in mantenimientos %}
                         <tr>
-                            <th>ID</th>
-                            <th>Fecha</th>
-                            <th>Tipo</th>
-                            <th>Costo </th>
-                            <th>Repuestos</th>
-                            <th style="width: 180px;">Acciones</th> 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for mantenimientoTem in mantenimientos %}
-                        <tr>
-                            <td>{{ mantenimientoTem.id }}</td>
-                            <td>{{ mantenimientoTem.fecha_servicio|date:"Y-m-d" }}</td>
-                            <td>
-                                {% if mantenimientoTem.tipo_mantenimiento == "Preventivo" %}
-                                    <span class="badge bg-info">Preventivo</span>
+                            <td><b>{{ m.vehiculo.placa }}</b></td>
+                            <td>{{ m.fecha_servicio }}</td>
+                            <td style="color: green; font-weight: bold;">${{ m.costo_taller }}</td>
+                            <td>{{ m.tipo_mantenimiento }}</td>
+                            <td>{{ m.repuestos_cambiados }}</td>
+                            <td class="text-center">
+                                {% if m.pdf_diagnostico %}
+                                    <a class="btn btn-outline-danger btn-sm" href="{{ m.pdf_diagnostico.url }}" target="_blank">
+                                        <i class="icon-file-pdf"></i> Ver Factura PDF
+                                    </a>
                                 {% else %}
-                                    <span class="badge bg-warning text-dark">Correctivo</span>
+                                    <span class="text-muted">Sin archivo</span>
                                 {% endif %}
                             </td>
-                            <td><b>${{ mantenimientoTem.costo_taller }}</b></td>
-                            <td>{{ mantenimientoTem.repuestos_cambiados }}</td>
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <a href="/editarMantenimiento/{{ mantenimientoTem.id }}/" class="btn btn-warning btn-sm flex-fill text-center" title="Editar">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="/eliminarMantenimiento/{{ mantenimientoTem.id }}/" onclick="return confirm('¿Seguro que quieres eliminar este mantenimiento?');" class="btn btn-danger btn-sm flex-fill text-center" title="Eliminar">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                    {% if mantenimientoTem.pdf_diagnostico %}                                     
-                                        <a class="btn btn-sm btn-outline-info" href="{{ mantenimientoTem.pdf_diagnostico.url }}" target="_blank"><i class="fa fa-file-pdf"></i></a>    
-                                        <a class="btn btn-sm btn-outline-dark" href="{{ mantenimientoTem.pdf_diagnostico.url }}" download><i class="fa fa-download"></i></a>                             
-                                    {% else %}
-                                        <button class="btn btn-sm btn-outline-secondary disabled" type="button"><i class="fa fa-file-excel"></i></button>    
-                                        <button class="btn btn-sm btn-outline-secondary disabled" type="button"><i class="fa fa-download"></i></button>  
-                                    {% endif %}
-                                </div>
-                            </td>
                         </tr>
-                        {% endfor %}
-                    </tbody> 
-                </table> 
-            </div> 
-        </div> 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-<script>
-    let tablaMantenimientos = new DataTable('#tbl_mantenimientos', {
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-        }
-    });
-</script>
+
+    <script>
+        let table = new DataTable('#tbl_mantenimientos');
+    </script>
 {% endblock %}

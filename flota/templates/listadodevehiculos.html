@@ -1,71 +1,86 @@
-{% extends 'index.html' %}
+{% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
-    <div class="container-fluid px-4"> 
-        <center>
-            <br> 
-            <h1 class="mb-4 text-dark"><b>Bienvenido a la sección de Vehículos</b>
-                <a href="/NuevoVehiculo/" class="btn btn-info"><i class="fa fa-plus-circle"></i> Nuevo Vehículo</a>
-            </h1>
-            <hr>
-        </center>
+    <center>
         <br>
+        <h1><b>Control de Flota Vehicular</b>            
+            {% if not user.username == "gerente" %}
+            <a href="/NuevoVehiculo/" class="btn btn-info"> 
+                <i class="icon-plus-circle"></i> Nuevo Vehículo
+            </a>        
+            {% endif %}
+        </h1>
+        <hr>
+    </center>
     
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <table id="tbl_vehiculos" class="table table-hover table-striped table-bordered align-middle text-dark">
-                    <thead class="table-dark"> 
+    {% if alertas %}
+    <div class="container">
+        <div class="alert alert-danger" role="alert" style="border-left: 6px solid #dc3545;">
+            <h4 class="alert-heading"><b>⚠️ ALERTAS DE PRESUPUESTO ANUAL REBASADO (Límite: $1500)</b></h4>
+            <p>El Gerente de Operaciones debe auditar los siguientes vehículos que excedieron el límite de gastos financieros:</p>
+            <hr>
+            <ul class="mb-0">
+                {% for alerta in alertas %}
+                    <li>El auto con placa <b>{{ alerta.placa }}</b> registra un gasto total de <b>${{ alerta.costo }}</b> (Exceso crítico de: <b>${{ alerta.exceso }}</b>).</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <br>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table id="tbl_vehiculos" class="table table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>PLACA</th>  
+                        <th>TIPO</th>   
+                        <th>COMBUSTIBLE</th>   
+                        <th>SEGURO VIGENTE</th>   
+                        <th>AÑO</th>       
+                        <th>FACHADA</th>               
+                        <th>COSTO ACUMULADO</th>               
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vehiculoTemporal in vehiculos %}
                         <tr>
-                            <th>ID</th>
-                            <th>Placa</th>
-                            <th>Tipo de Vehículo</th>
-                            <th>Año Modelo</th>
-                            <th>Foto</th>
-                            <th style="width: 180px;">Acciones</th> 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for vehiculoTem in vehiculos %}
-                        <tr>
-                            <td>{{ vehiculoTem.id }}</td>
-                            <td><b>{{ vehiculoTem.placa }}</b></td>
-                            <td>{{ vehiculoTem.tipo_vehiculo }} ({{ vehiculoTem.tipo_combustible }})</td>
-                            <td>{{ vehiculoTem.anio_modelo }}</td>
+                            <td><b>{{vehiculoTemporal.placa}}</b></td>
+                            <td>{{vehiculoTemporal.tipo_vehiculo}}</td>
+                            <td>{{vehiculoTemporal.tipo_combustible}}</td>
                             <td class="text-center">
-                                {% if vehiculoTem.foto %}
-                                    <img src="{{ vehiculoTem.foto.url }}" alt="Foto del Vehículo" width="100" class="img-thumbnail">
+                                {% if vehiculoTemporal.seguro_vigente %}
+                                    <span class="badge bg-success" style="color: white; padding: 5px 10px;">VIGENTE</span>
                                 {% else %}
-                                    <span class="text-muted small">No hay foto</span>
+                                    <span class="badge bg-danger" style="color: white; padding: 5px 10px;">VENCIDO</span>
+                                {% endif %}
+                            </td>
+                            <td>{{vehiculoTemporal.anio_modelo}}</td>
+                            <td class="text-center">
+                                {% if vehiculoTemporal.foto %}
+                                 <a href="{{ vehiculoTemporal.foto.url }}" target="_blank">
+                                    <img src="{{ vehiculoTemporal.foto.url }}" style="height:40px; width:60px; border-radius:4px; object-fit: cover;"> 
+                                 </a>                                      
+                                {% else %}
+                                    <b>N/A</b>
                                 {% endif %}
                             </td>
                             <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <a href="/editarVehiculo/{{ vehiculoTem.id }}/" class="btn btn-warning btn-sm flex-fill text-center" title="Editar">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="/eliminarVehiculo/{{ vehiculoTem.id }}/" onclick="return confirm('¿Seguro que quieres eliminar este vehículo?');" class="btn btn-danger btn-sm flex-fill text-center" title="Eliminar">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                    {% if vehiculoTem.foto %}                                     
-                                        <a class="btn btn-sm btn-outline-info" href="{{ vehiculoTem.foto.url }}" target="_blank"><i class="fa fa-image"></i></a>    
-                                        <a class="btn btn-sm btn-outline-dark" href="{{ vehiculoTem.foto.url }}" download><i class="fa fa-download"></i></a>                             
-                                    {% else %}
-                                        <button class="btn btn-sm btn-outline-secondary disabled" type="button"><i class="fa fa-image"></i></button>    
-                                        <button class="btn btn-sm btn-outline-secondary disabled" type="button"><i class="fa fa-download"></i></button>  
-                                    {% endif %}
-                                </div>
+                                {% if vehiculoTemporal.costo_acumulado > 1500 %}
+                                    <span style="color: #dc3545; font-weight: bold;">${{ vehiculoTemporal.costo_acumulado }}</span>
+                                {% else %}
+                                    <span style="color: #198754; font-weight: bold;">${{ vehiculoTemporal.costo_acumulado }}</span>
+                                {% endif %}
                             </td>
                         </tr>
-                        {% endfor %}
-                    </tbody> 
-                </table> 
-            </div> 
-        </div> 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-<script>
-    let tablaVehiculos = new DataTable('#tbl_vehiculos', {
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-        }
-    });
-</script>
+
+    <script>
+        let table = new DataTable('#tbl_vehiculos');
+    </script>
 {% endblock %}
