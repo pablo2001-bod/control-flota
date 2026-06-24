@@ -13,26 +13,19 @@
                     <br>
                     
                     <b>Placa:</b> <br>
-                    <input value="{{vehiculo.placa}}" placeholder="Ingrese la Nueva placa" class="form-control" type="text" name="placa" required>
+                    <input value="{{vehiculo.placa}}" placeholder="Ingrese la Nueva placa" class="form-control" type="text" name="placa">
                     <br>
                     
                     <b>Tipo de Vehículo:</b> <br>
-                    <select class="form-control" name="tipo_vehiculo" required>
-                        <option value="Sedán" {% if vehiculo.tipo_vehiculo == "Sedán" %}selected{% endif %}>Sedán</option>
-                        <option value="Camioneta" {% if vehiculo.tipo_vehiculo == "Camioneta" %}selected{% endif %}>Camioneta</option>
-                        <option value="Camión" {% if vehiculo.tipo_vehiculo == "Camión" %}selected{% endif %}>Camión</option>
-                    </select>
+                    <input value="{{vehiculo.tipo_vehiculo}}" placeholder="Ingrese el Nuevo tipo" class="form-control" type="text" name="tipo_vehiculo">
                     <br>
                     
                     <b>Tipo de Combustible:</b> <br>
-                    <select class="form-control" name="tipo_combustible" required>
-                        <option value="Gasolina" {% if vehiculo.tipo_combustible == "Gasolina" %}selected{% endif %}>Gasolina</option>
-                        <option value="Diésel" {% if vehiculo.tipo_combustible == "Diésel" %}selected{% endif %}>Diésel</option>
-                    </select>
+                    <input value="{{vehiculo.tipo_combustible}}" placeholder="Ingrese el Nuevo combustible" class="form-control" type="text" name="tipo_combustible">
                     <br>
                     
                     <b>Año del Modelo:</b> <br>
-                    <input value="{{vehiculo.anio_modelo}}" class="form-control" type="number" name="anio_modelo" required>
+                    <input value="{{vehiculo.anio_modelo}}" placeholder="Ingrese el Nuevo año" class="form-control" type="number" name="anio_modelo">
                     <br>
                     
                     <b>¿Tiene seguro vigente?</b> &nbsp;
@@ -44,8 +37,9 @@
                     <br>
 
                     <div style="text-align: center;">
-                        <button class="btn btn-success" type="submit"><i class="fa fa-edit"></i> ACTUALIZAR</button>
-                        <a href="/listadodevehiculos/" class="btn btn-danger"><i class="fa fa-times"></i> CANCELAR</a>
+                        <button class="btn btn-success" type="submit"><i class="icon-edit"></i> Actualizar</button>
+                        <a href="/listadodevehiculos" class="btn btn-danger"><i class="icon-close"></i> Cancelar
+                        </a>
                     </div>
                 </form>
 
@@ -60,15 +54,16 @@
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-        {% if vehiculo.foto %}
+
         initialPreview: [
             "{{ vehiculo.foto.url }}"
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
+
         overwriteInitial: true
-        {% endif %}
-    });
-    $(".fileinput-upload").hide();
+        });
+        $(".fileinput-upload").hide();
+            
     </script>
 {% endblock %}
