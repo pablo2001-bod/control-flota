@@ -1,7 +1,8 @@
 import os
 from django.shortcuts import render, redirect
-from django.contrib import messages 
 from .models import Vehiculo, Mantenimiento
+from django.contrib import messages 
+
 
 def inicio(request):
     return render(request, 'inicio.html')
@@ -92,10 +93,25 @@ def actualizarVehiculo(request):
     return redirect('/listadodevehiculos/')
 
 def eliminarVehiculo(request, id):
-    vehiculo = Vehiculo.objects.get(id=id) 
-    vehiculo.delete()
-    messages.success(request, f"¡El vehículo {vehiculo.placa} ha sido eliminado de la flota correctamente!")
-    return redirect('/listadodevehiculos/')
+    # Capturar el ID
+    # El primer parametro id es el de la BDD
+    # El segundo es el que acompaña a request osea la variable
+    vehiculoEliminado = Vehiculo.objects.get(id=id)
+    
+    # si el vehículo tiene foto y el archivo físico existe en el servidor
+    # lo borramos
+    # "os.path.exists"
+    # Verifica si la foto realmente existe en la carpeta antes de hacer nada.
+    # Evita que el sistema falle.
+    if vehiculoEliminado.foto and os.path.exists(vehiculoEliminado.foto.path):
+        # "os.remove"
+        # Borra la foto físicamente del disco duro para que no ocupe espacio
+        # innecesario (elimina la basura).
+        os.remove(vehiculoEliminado.foto.path)
+        
+    vehiculoEliminado.delete()
+    messages.success(request, 'Vehículo Eliminado Exitosamente')
+    return redirect('/listadodevehiculos')
 
 #Mantenimiento
  
@@ -156,7 +172,16 @@ def actualizarMantenimiento(request):
     return redirect('/listadodemantenimientos/')  
 
 def eliminarMantenimiento(request, id):
-    mantenimiento = Mantenimiento.objects.get(id=id) 
+    mantenimiento = Mantenimiento.objects.get(id=id)
+    
+    # SI EL MANTENIMIENTO TIENE PDF Y EL ARCHIVO FÍSICO EXISTE EN EL SERVIDOR LO BORRAMOS
+    # "os.path.exists" Verifica si el PDF realmente existe en la carpeta antes de hacer nada.
+    if mantenimiento.pdf_diagnostico and os.path.exists(mantenimiento.pdf_diagnostico.path):
+        # "os.remove" Borra el PDF físicamente del disco duro para que no ocupe espacio innecesario.
+        os.remove(mantenimiento.pdf_diagnostico.path)
+        
+    # Una vez borrado el archivo del disco duro, eliminamos el registro de la Base de Datos
     mantenimiento.delete()
-    messages.success(request, f"¡El registro de mantenimiento ID {mantenimiento.id} ha sido eliminado correctamente!")
+    
+    messages.success(request, f"¡El registro de mantenimiento ID {id} ha sido eliminado correctamente!")
     return redirect('/listadodemantenimientos/')

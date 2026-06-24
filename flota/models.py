@@ -17,7 +17,7 @@ class Mantenimiento(models.Model):
     costo_taller = models.FloatField()
     tipo_mantenimiento = models.CharField(max_length=20)  # Preventivo, Correctivo
     repuestos_cambiados = models.TextField()
-    pdf_diagnostico = models.FileField(upload_to='diagnosticos/', null=True, blank=True)
+    pdf_diagnostico = models.FileField(upload_to='mantenimientos/', null=True, blank=True)
 
     def __str__(self):
         return f"Mantenimiento #{self.id} - {self.vehiculo.placa}"
