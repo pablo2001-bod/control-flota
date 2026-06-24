@@ -9,10 +9,11 @@
                 <hr>
                 <form action="/actualizarVehiculo/" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input value="{{vehiculo.id}}" type="hidden" name="id" readonly>
+                    <input value="{{vehiculo.id}}" class="form-control" type="hidden" name="id" readonly>
+                    <br>
                     
                     <b>Placa:</b> <br>
-                    <input value="{{vehiculo.placa}}" class="form-control" type="text" name="placa" required>
+                    <input value="{{vehiculo.placa}}" placeholder="Ingrese la Nueva placa" class="form-control" type="text" name="placa" required>
                     <br>
                     
                     <b>Tipo de Vehículo:</b> <br>
@@ -24,31 +25,27 @@
                     <br>
                     
                     <b>Tipo de Combustible:</b> <br>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="tipo_combustible" id="gasolina" value="Gasolina" {% if vehiculo.tipo_combustible == "Gasolina" %}checked{% endif %}>
-                        <label class="form-check-label" for="gasolina">Gasolina</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="tipo_combustible" id="diesel" value="Diésel" {% if vehiculo.tipo_combustible == "Diésel" %}checked{% endif %}>
-                        <label class="form-check-label" for="diesel">Diésel</label>
-                    </div>
-                    <br><br>
-                    
-                    <b>¿Tiene seguro vigente?</b> &nbsp;
-                    <input type="checkbox" name="seguro_vigente" value="True" {% if vehiculo.seguro_vigente %}checked{% endif %} style="transform: scale(1.2); vertical-align: middle;">
-                    <br><br>
+                    <select class="form-control" name="tipo_combustible" required>
+                        <option value="Gasolina" {% if vehiculo.tipo_combustible == "Gasolina" %}selected{% endif %}>Gasolina</option>
+                        <option value="Diésel" {% if vehiculo.tipo_combustible == "Diésel" %}selected{% endif %}>Diésel</option>
+                    </select>
+                    <br>
                     
                     <b>Año del Modelo:</b> <br>
                     <input value="{{vehiculo.anio_modelo}}" class="form-control" type="number" name="anio_modelo" required>
                     <br>
+                    
+                    <b>¿Tiene seguro vigente?</b> &nbsp;
+                    <input type="checkbox" name="seguro_vigente" value="True" {% if vehiculo.seguro_vigente %}checked{% endif %} style="transform: scale(1.2); vertical-align: middle;">
+                    <br><br>
                     
                     <b>Subir Nueva Foto (Opcional):</b> <br>
                     <input id="foto" class="form-control" type="file" name="foto" accept="image/*">
                     <br>
 
                     <div style="text-align: center;">
-                        <button class="btn btn-success" type="submit"><i class="fa fa-edit"></i> Actualizar</button>
-                        <a href="/listadodevehiculos/" class="btn btn-danger"><i class="fa fa-times"></i> Cancelar</a>
+                        <button class="btn btn-success" type="submit"><i class="fa fa-edit"></i> ACTUALIZAR</button>
+                        <a href="/listadodevehiculos/" class="btn btn-danger"><i class="fa fa-times"></i> CANCELAR</a>
                     </div>
                 </form>
                 <br>
@@ -64,7 +61,9 @@
         dropZoneEnabled: true,
         showClose: false,
         {% if vehiculo.foto %}
-        initialPreview: ["{{ vehiculo.foto.url }}"],
+        initialPreview: [
+            "{{ vehiculo.foto.url }}"
+        ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
         {% endif %}
