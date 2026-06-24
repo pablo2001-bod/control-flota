@@ -13,19 +13,10 @@
                     <input required minlength="7" maxlength="10" placeholder="Ingrese la placa del vehículo" class="form-control" type="text" name="placa">
                     <br>
                     <b>Tipo de Vehículo:</b> <br>
-                    <select required class="form-control" name="tipo_vehiculo">
-                        <option value="">-- Seleccione el Tipo --</option>
-                        <option value="Sedán">Sedán</option>
-                        <option value="Camioneta">Camioneta</option>
-                        <option value="Camión">Camión</option>
-                    </select>
+                    <input required placeholder="Ingrese el tipo de vehículo" class="form-control" type="text" name="tipo_vehiculo">
                     <br>
                     <b>Tipo de Combustible:</b> <br>
-                    <select required class="form-control" name="tipo_combustible">
-                        <option value="">-- Seleccione Combustible --</option>
-                        <option value="Gasolina">Gasolina</option>
-                        <option value="Diésel">Diésel</option>
-                    </select>
+                    <input required placeholder="Ingrese el tipo de combustible" class="form-control" type="text" name="tipo_combustible">
                     <br>
                     <b>Año del Modelo:</b> <br>
                     <input required placeholder="Ingrese el año de fabricación" class="form-control" type="number" name="anio_modelo">
@@ -33,13 +24,12 @@
                     <b>¿Tiene seguro vigente?</b> &nbsp;
                     <input type="checkbox" name="seguro_vigente" value="True" style="transform: scale(1.2); vertical-align: middle;">
                     <br><br>
-                    
                     <b>Fotografía</b>
                     <input type="file" name="foto" id="foto">
                     <br> <br>
                     <div style="text-align: center; ">
-                    <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> GUARDAR</button>
-                    <a href="/listadodevehiculos/" class="btn btn-danger"> <i class="fa fa-times"></i> CANCELAR</a>
+                    <button class="btn btn-success" type="submit"> <i class="icon-save"></i> Guardar</button>
+                    <a href="/listadodevehiculos" class="btn btn-danger"> <i class="icon-close"></i> Cancelar</a>
                     </div>
                 </form>
 
@@ -49,37 +39,30 @@
     </div>
     <script>
         $("#form_nuevo_vehiculo").validate({
-            rules:{
+            reules:{
                 placa:{
                     required:true,
-                    minlength: 7
+                },
+                anio_modelo:{
+                    number:true,
+                    required:true
                 },
                 tipo_vehiculo:{
                     required:true
-                },
-                tipo_combustible:{
-                    required:true
-                },
-                anio_modelo:{
-                    required:true,
-                    number:true
                 }
             },
             messages:{
                 placa:{
-                    required:"Por favor ingrese la placa",
-                    minlength:"La placa debe tener al menos 7 caracteres"
-                },
-                tipo_vehiculo:{
-                    required:"Por favor seleccione el tipo"
-                },
-                tipo_combustible:{
-                    required:"Por favor seleccione el combustible"
+                    required:"Por favor ingrese la placa del vehículo",
                 },
                 anio_modelo:{
                     required:"Por favor ingrese el año",
-                    number: "Por favor introduzca un número válido"
+                    number: "Por favor introduzca un números validos"
+                },
+                tipo_vehiculo:{
+                    required:"Por favor ingrese el tipo de vehículo"
                 }
+
             }
         });
     </script>
@@ -87,7 +70,7 @@
     <script>
           $("#foto").fileinput({
             language: "es",
-            allowedFileExtensions: ["png", "jpg", "jpeg"],
+            allowedFileExtensions: ["png|jpg|jpeg"],
             showCaption: false,
             dropZoneEnabled: true,
             showClose: false
