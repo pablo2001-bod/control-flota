@@ -13,19 +13,19 @@
                     <br>
                     
                     <b>Placa:</b> <br>
-                    <input value="{{vehiculo.placa}}" placeholder="Ingrese el nuevo número de placa" class="form-control" type="text" name="placa">
+                    <input value="{{vehiculo.placa}}" placeholder="Ingrese la Nueva placa" class="form-control" type="text" name="placa">
                     <br>
                     
                     <b>Tipo Vehículo:</b> <br>
-                    <input value="{{vehiculo.tipo_vehiculo}}" placeholder="Ingrese el nuevo tipo de vehículo" class="form-control" type="text" name="tipo_vehiculo">
+                    <input value="{{vehiculo.tipo_vehiculo}}" placeholder="Ingrese el Nuevo tipo de vehículo" class="form-control" type="text" name="tipo_vehiculo">
                     <br>
                     
                     <b>Tipo Combustible:</b> <br>
-                    <input value="{{vehiculo.tipo_combustible}}" placeholder="Ingrese el nuevo tipo de combustible" class="form-control" type="text" name="tipo_combustible">
+                    <input value="{{vehiculo.tipo_combustible}}" placeholder="Ingrese el Nuevo tipo de combustible" class="form-control" type="text" name="tipo_combustible">
                     <br>
                     
                     <b>Año Modelo:</b> <br>
-                    <input value="{{vehiculo.anio_modelo}}" placeholder="Ingrese el nuevo año del modelo" class="form-control" type="number" name="anio_modelo">
+                    <input value="{{vehiculo.anio_modelo}}" placeholder="Ingrese el Nuevo año del modelo" class="form-control" type="number" name="anio_modelo">
                     <br>
                     
                     <b>¿Seguro Vigente?</b> <br>
@@ -38,7 +38,8 @@
 
                     <div style="text-align: center;">
                         <button class="btn btn-success" type="submit"><i class="icon-edit"></i> Actualizar</button>
-                        <a href="/listadodevehiculos/" class="btn btn-danger"><i class="icon-close"></i> Cancelar</a>
+                        <a href="/listadodevehiculos" class="btn btn-danger"><i class="icon-close"></i> Cancelar
+                        </a>
                     </div>
                 </form>
 
@@ -49,19 +50,20 @@
     <script>
     $("#foto").fileinput({
         language: "es",
-        allowedFileExtensions: ["png|jpg|jpeg"],
+        allowedFileExtensions: ["png", "jpg", "jpeg"],
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false,
-        {% if vehiculo.foto %}
+
         initialPreview: [
             "{{ vehiculo.foto.url }}"
         ],
         initialPreviewAsData: true,
         initialPreviewFileType: 'image',
+
         overwriteInitial: true
-        {% endif %}
-    });
-    $(".fileinput-upload").hide();
+        });
+        $(".fileinput-upload").hide();
+            
     </script>
 {% endblock %}
